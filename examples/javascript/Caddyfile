@@ -1,0 +1,9 @@
+example.com {
+	@websockets {
+		header Connection *Upgrade*
+		header Upgrade    websocket
+	}
+	header X-Real-IP {remote}
+	reverse_proxy @websockets :3102
+	reverse_proxy localhost:3111
+}
