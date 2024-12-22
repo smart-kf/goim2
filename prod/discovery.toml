@@ -1,4 +1,3 @@
-# 同一discovery集群的所有node节点地址，包含本node
 nodes = ["discovery:7171"]
 enableprotect=false
 
@@ -18,7 +17,7 @@ DeployEnv = "dev"
 # 本节点监听端口
 # 注意：ip别配置为0.0.0.0或者127.0.0.1
 [httpServer]
-addr = ":7171"
+addr = "discovery:7171"
 timeout="40s"
 
 # 当前节点同步其他节点使用的http client
