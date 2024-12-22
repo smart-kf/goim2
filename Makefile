@@ -13,6 +13,9 @@ build:
 	$(GOBUILD) -o bin/job cmd/job/main.go
 	cd cmd/dis && go mod tidy && $(GOBUILD) -o ../../bin/dis main.go
 
+build-image:
+	docker build -t goim .
+
 test:
 	$(GOTEST) -v ./...
 
