@@ -1,18 +1,17 @@
 # Go parameters
-GOCMD=GO111MODULE=on go
+GOCMD=GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go
 GOBUILD=$(GOCMD) build
 GOTEST=$(GOCMD) test
 
 all: test build
 build:
-	rm -rf target/
-	mkdir target/
-	cp cmd/comet/comet-example.toml target/comet.toml
-	cp cmd/logic/logic-example.toml target/logic.toml
-	cp cmd/job/job-example.toml target/job.toml
-	$(GOBUILD) -o target/comet cmd/comet/main.go
-	$(GOBUILD) -o target/logic cmd/logic/main.go
-	$(GOBUILD) -o target/job cmd/job/main.go
+	rm -rf bin/
+	mkdir bin/
+	go mod tidy
+	$(GOBUILD) -o bin/comet cmd/comet/main.go
+	$(GOBUILD) -o bin/logic cmd/logic/main.go
+	$(GOBUILD) -o bin/job cmd/job/main.go
+	cd cmd/dis && go mod tidy && $(GOBUILD) -o ../../bin/dis main.go
 
 test:
 	$(GOTEST) -v ./...
@@ -21,11 +20,11 @@ clean:
 	rm -rf target/
 
 run:
-	nohup target/logic -conf=target/logic.toml -region=sh -zone=sh001 -deploy.env=dev -weight=10 2>&1 > target/logic.log &
-	nohup target/comet -conf=target/comet.toml -region=sh -zone=sh001 -deploy.env=dev -weight=10 -addrs=127.0.0.1 -debug=true 2>&1 > target/comet.log &
-	nohup target/job -conf=target/job.toml -region=sh -zone=sh001 -deploy.env=dev 2>&1 > target/job.log &
+	nohup bin/logic -conf=bin/logic.toml -region=sh -zone=sh001 -deploy.env=dev -weight=10 2>&1 > bin/logic.log &
+	nohup bin/comet -conf=bin/comet.toml -region=sh -zone=sh001 -deploy.env=dev -weight=10 -addrs=127.0.0.1 -debug=true 2>&1 > bin/comet.log &
+	nohup bin/job -conf=bin/job.toml -region=sh -zone=sh001 -deploy.env=dev 2>&1 > bin/job.log &
 
 stop:
-	pkill -f target/logic
-	pkill -f target/job
-	pkill -f target/comet
+	pkill -f dis/logic
+	pkill -f dis/job
+	pkill -f dis/comet

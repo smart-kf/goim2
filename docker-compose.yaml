@@ -1,0 +1,63 @@
+services:
+  discovery:
+    image: goim
+    ports:
+      - 7171:7171  # rpc
+    command:
+      - /app/dis
+      - -conf=discovery.toml
+    volumes:
+      - ./prod/discovery.toml:/app/discovery.toml
+    restart: always
+
+  comet:
+    image: goim
+    ports:
+      - 3109:3109  # rpc
+      - 3101:3101  # tcp ??
+      - 3102:3102  # websocket
+    command:
+      - /app/comet
+      - -conf=/app/comet.toml
+      - -region=sh
+      - -zone=sh001
+      - -host=test1
+      - -deploy.env=dev
+    volumes:
+      - ./prod/comet.toml:/app/comet.toml
+    depends_on:
+      - discovery
+    restart: always
+
+  logic:
+    image: goim
+    ports:
+      - 3119:3119  # rpc
+      - 3111:3111  # http
+    depends_on:
+      - discovery
+    command:
+      - /app/logic
+      - -conf=/app/logic.toml
+      - -region=sh
+      - -zone=sh001
+      - -host=test1
+      - -deploy.env=dev
+    volumes:
+      - ./prod/logic.toml:/app/logic.toml
+    restart: always
+
+  job:
+    image: goim
+    depends_on:
+      - discovery
+    command:
+      - /app/job
+      - -conf=/app/job.toml
+      - -region=sh
+      - -zone=sh001
+      - -host=test1
+      - -deploy.env=dev
+    volumes:
+      - ./prod/job.toml:/app/job.toml
+    restart: always
