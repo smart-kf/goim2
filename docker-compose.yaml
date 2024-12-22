@@ -9,6 +9,8 @@ services:
     volumes:
       - ./prod/discovery.toml:/app/discovery.toml
     restart: always
+    networks:
+      - mysql_kf_network
 
   comet:
     image: goim
@@ -28,6 +30,8 @@ services:
     depends_on:
       - discovery
     restart: always
+    networks:
+      - mysql_kf_network
 
   logic:
     image: goim
@@ -46,6 +50,8 @@ services:
     volumes:
       - ./prod/logic.toml:/app/logic.toml
     restart: always
+    networks:
+      - mysql_kf_network
 
   job:
     image: goim
@@ -61,3 +67,9 @@ services:
     volumes:
       - ./prod/job.toml:/app/job.toml
     restart: always
+    networks:
+      - mysql_kf_network
+
+networks:
+  mysql_kf_network:
+    external: true
