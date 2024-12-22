@@ -1,7 +1,7 @@
 # This is a TOML document. Boom
 
 [discovery]
-    nodes = [discovery:7171"]
+    nodes = ["discovery:7171"]
 
 [rpcServer]
     addr = ":3109"

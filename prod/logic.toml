@@ -35,8 +35,8 @@
 [httpServer]
     network = "tcp"
     addr = ":3111"
-	readTimeout = "1s"
-	writeTimeout = "1s"
+    readTimeout = "1s"
+    writeTimeout = "1s"
 
 [kafka]
     topic = "goim-push-topic"
