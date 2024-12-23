@@ -334,7 +334,7 @@ func (s *Server) authTCP(ctx context.Context, rr *bufio.Reader, wr *bufio.Writer
 			log.Errorf("tcp request operation(%d) not auth", p.Op)
 		}
 	}
-	if mid, key, rid, accepts, hb, err = s.Connect(ctx, p, ""); err != nil {
+	if mid, key, rid, accepts, hb, err = s.Connect(ctx, p, AuthInfo{}); err != nil {
 		log.Errorf("authTCP.Connect(key:%v).err(%v)", key, err)
 		return
 	}

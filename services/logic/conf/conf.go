@@ -82,6 +82,7 @@ type Config struct {
 	Node       *Node
 	Backoff    *Backoff
 	Regions    map[string][]string
+	Auth       *Auth
 }
 
 // Env is env config.
@@ -157,4 +158,12 @@ type HTTPServer struct {
 	Addr         string
 	ReadTimeout  xtime.Duration
 	WriteTimeout xtime.Duration
+}
+
+type Auth struct {
+	Enable     bool
+	AuthUrl    string
+	AuthMethod string
+	AuthOkCode int
+	Timeout    int
 }

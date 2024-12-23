@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"net/http"
+	"net/url"
 	"strings"
 
 	"github.com/smart-kf/goim2/pkg/bufio"
@@ -18,6 +19,29 @@ type Request struct {
 	Header     http.Header
 
 	reader *bufio.Reader
+	url    *url.URL
+}
+
+func (r *Request) parseURL() {
+	r.url, _ = url.ParseRequestURI(r.RequestURI)
+}
+
+func (r *Request) RequestPath() string {
+	if r.url == nil {
+		return ""
+	}
+	return r.url.Path
+}
+
+func (r *Request) Query() url.Values {
+	if r.url == nil {
+		return nil
+	}
+	return r.url.Query()
+}
+
+func (r *Request) Headers() http.Header {
+	return r.Header
 }
 
 // ReadRequest reads and parses an incoming request from b.
@@ -37,6 +61,7 @@ func ReadRequest(r *bufio.Reader) (req *Request, err error) {
 		return
 	}
 	req.Host = req.Header.Get("Host")
+	req.parseURL()
 	return req, nil
 }
 

@@ -2,6 +2,9 @@ package comet
 
 import (
 	"context"
+	"encoding/json"
+	"net/http"
+	"net/url"
 	"time"
 
 	log "github.com/golang/glog"
@@ -13,11 +16,23 @@ import (
 	"google.golang.org/grpc/encoding/gzip"
 )
 
+type AuthInfo struct {
+	Header http.Header `json:"header"`
+	Query  url.Values  `json:"query"`
+}
+
 // Connect connected a connection.
-func (s *Server) Connect(c context.Context, p *protocol.Proto, cookie string) (mid int64, key, rid string, accepts []int32, heartbeat time.Duration, err error) {
+func (s *Server) Connect(c context.Context, p *protocol.Proto, authInfo AuthInfo) (mid int64, key, rid string, accepts []int32, heartbeat time.Duration, err error) {
+	var (
+		authData []byte
+	)
+	authData, err = json.Marshal(authInfo)
+	if err != nil {
+		return 0, "", "", nil, 0, err
+	}
 	reply, err := s.rpcClient.Connect(c, &logic.ConnectReq{
 		Server: s.serverID,
-		Cookie: cookie,
+		Cookie: string(authData),
 		Token:  p.Body,
 	})
 	if err != nil {

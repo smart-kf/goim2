@@ -3,6 +3,9 @@ package logic
 import (
 	"context"
 	"encoding/json"
+	"errors"
+	"net/http"
+	"strings"
 	"time"
 
 	log "github.com/golang/glog"
@@ -12,7 +15,11 @@ import (
 )
 
 // Connect connected a conn.
-func (l *Logic) Connect(c context.Context, server, cookie string, token []byte) (mid int64, key, roomID string, accepts []int32, hb int64, err error) {
+func (l *Logic) Connect(c context.Context, server, query string, wsToken []byte) (mid int64, key, roomID string, accepts []int32, hb int64, err error) {
+	if err = l.onAuth(c, query); err != nil {
+		log.Errorf("auth failed:token:%+v err=%+v", query, err)
+		return
+	}
 	var params struct {
 		Mid      int64   `json:"mid"`
 		Key      string  `json:"key"`
@@ -20,8 +27,8 @@ func (l *Logic) Connect(c context.Context, server, cookie string, token []byte) 
 		Platform string  `json:"platform"`
 		Accepts  []int32 `json:"accepts"`
 	}
-	if err = json.Unmarshal(token, &params); err != nil {
-		log.Errorf("json.Unmarshal(%s) error(%v)", token, err)
+	if err = json.Unmarshal(wsToken, &params); err != nil {
+		log.Errorf("json.Unmarshal(%s) error(%v)", wsToken, err)
 		return
 	}
 	mid = params.Mid
@@ -34,7 +41,7 @@ func (l *Logic) Connect(c context.Context, server, cookie string, token []byte) 
 	if err = l.dao.AddMapping(c, mid, key, server); err != nil {
 		log.Errorf("l.dao.AddMapping(%d,%s,%s) error(%v)", mid, key, server, err)
 	}
-	log.Infof("conn connected key:%s server:%s mid:%d token:%s", key, server, mid, token)
+	log.Infof("conn connected key:%s server:%s mid:%d token:%s", key, server, mid, wsToken)
 	return
 }
 
@@ -82,4 +89,24 @@ func (l *Logic) RenewOnline(c context.Context, server string, roomCount map[stri
 func (l *Logic) Receive(c context.Context, mid int64, proto *protocol.Proto) (err error) {
 	log.Infof("receive mid:%d message:%+v", mid, proto)
 	return
+}
+
+func (l *Logic) onAuth(ctx context.Context, query string) error {
+	if !l.c.Auth.Enable {
+		return nil
+	}
+	req, err := http.NewRequest(http.MethodPost, l.c.Auth.AuthUrl, strings.NewReader(query))
+	if err != nil {
+		return err
+	}
+	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
+	req = req.WithContext(ctx)
+	resp, err := l.authHttpClent.Do(req)
+	if err != nil {
+		return err
+	}
+	if resp.StatusCode != l.c.Auth.AuthOkCode {
+		return errors.New("auth failed")
+	}
+	return nil
 }

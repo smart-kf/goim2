@@ -2,6 +2,7 @@ package logic
 
 import (
 	"context"
+	"net/http"
 	"strconv"
 	"time"
 
@@ -27,9 +28,10 @@ type Logic struct {
 	totalConns int64
 	roomCount  map[string]int32
 	// load balancer
-	nodes        []*naming.Instance
-	loadBalancer *LoadBalancer
-	regions      map[string]string // province -> region
+	nodes         []*naming.Instance
+	loadBalancer  *LoadBalancer
+	regions       map[string]string // province -> region
+	authHttpClent *http.Client
 }
 
 // New init
@@ -40,6 +42,9 @@ func New(c *conf.Config) (l *Logic) {
 		dis:          naming.New(c.Discovery),
 		loadBalancer: NewLoadBalancer(),
 		regions:      make(map[string]string),
+		authHttpClent: &http.Client{
+			Timeout: time.Duration(c.Auth.Timeout) * time.Second,
+		},
 	}
 	l.initRegions()
 	l.initNodes()
