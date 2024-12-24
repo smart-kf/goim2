@@ -17,8 +17,9 @@ import (
 )
 
 type AuthInfo struct {
-	Header http.Header `json:"header"`
-	Query  url.Values  `json:"query"`
+	Header        http.Header `json:"header"`
+	Query         url.Values  `json:"query"`
+	RemoteAddress string      `json:"remoteAddress"`
 }
 
 // Connect connected a connection.

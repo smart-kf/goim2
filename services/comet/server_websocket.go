@@ -209,8 +209,9 @@ func (s *Server) ServeWebsocket(conn net.Conn, rp, wp *bytes.Pool, tr *xtime.Tim
 	step = 3
 	if p, err = ch.CliProto.Set(); err == nil {
 		if ch.Mid, ch.Key, rid, accepts, hb, err = s.authWebsocket(ctx, ws, p, AuthInfo{
-			Header: req.Headers(),
-			Query:  req.Query(),
+			Header:        req.Headers(),
+			Query:         req.Query(),
+			RemoteAddress: conn.RemoteAddr().String(),
 		}); err == nil {
 			ch.Watch(accepts...)
 			b = s.Bucket(ch.Key)
