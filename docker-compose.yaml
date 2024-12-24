@@ -52,7 +52,6 @@ services:
     restart: always
     networks:
       - kf_network
-      - kf-api_kf_service_network
 
   job:
     image: goim
