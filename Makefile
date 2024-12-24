@@ -19,6 +19,21 @@ discovery:
 	tar -zxvf discovery.tar.gz -C discovery
 	mv discovery/discovery bin/dis
 
+# 下载依赖discovery 到 bin 目录
+discovery-macos:
+	curl -sSL -o discovery.tar.gz https://github.com/smart-kf/discovery/releases/download/v1.0.1/discovery_1.0.1_darwin_arm64.tar.gz
+	mkdir discovery
+	tar -zxvf discovery.tar.gz -C discovery
+	mv discovery/discovery bin/dis
+	rm -rf discovery.tar.gz
+
+discovery-local-image:
+	curl -sSL -o discovery.tar.gz https://github.com/smart-kf/discovery/releases/download/v1.0.1/discovery_1.0.1_linux_amd64_m2.tar.gz
+	mkdir discovery
+	tar -zxvf discovery.tar.gz -C discovery
+	mv discovery/discovery bin/dis
+	rm -rf discovery.tar.gz
+
 build-image:
 	docker build -t goim .
 
