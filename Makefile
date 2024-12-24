@@ -11,7 +11,13 @@ build:
 	$(GOBUILD) -o bin/comet cmd/comet/main.go
 	$(GOBUILD) -o bin/logic cmd/logic/main.go
 	$(GOBUILD) -o bin/job cmd/job/main.go
-	cd cmd/dis && go mod tidy && $(GOBUILD) -o ../../bin/dis main.go
+
+# 下载依赖discovery 到 bin 目录
+discovery:
+	curl -sSL -o discovery.tar.gz https://github.com/bilibili/discovery/releases/download/v1.0.1/discovery_1.0.1_Linux_x86_64.tar.gz
+	mkdir discovery
+	tar -zxvf discovery.tar.gz -C discovery
+	mv discovery/discovery bin/dis
 
 build-image:
 	docker build -t goim .

@@ -52,6 +52,7 @@ services:
     restart: always
     networks:
       - mysql_kf_network
+      - kf-api_kf_service_network
 
   job:
     image: goim
@@ -72,4 +73,6 @@ services:
 
 networks:
   mysql_kf_network:
+    external: true
+  kf-api_kf_service_network:
     external: true
