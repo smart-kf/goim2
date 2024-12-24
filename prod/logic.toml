@@ -45,7 +45,7 @@
 [redis]
     network = "tcp"
     addr = "redis:6379"
-    auth = "G4t!9zQ#xA7$kRp2"
+    auth = "238XSfh98xa"
     active = 60000
     idle = 1024
     dialTimeout = "200ms"
