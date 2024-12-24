@@ -22,6 +22,9 @@ discovery:
 build-image:
 	docker build -t goim .
 
+reload:
+	@docker compose stop && docker compose rm -f && docker compose up -d
+
 test:
 	$(GOTEST) -v ./...
 
