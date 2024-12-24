@@ -99,7 +99,7 @@ func (l *Logic) onAuth(ctx context.Context, query string) error {
 	if err != nil {
 		return err
 	}
-	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
+	req.Header.Add("Content-Type", "application/json")
 	req = req.WithContext(ctx)
 	resp, err := l.authHttpClent.Do(req)
 	if err != nil {
