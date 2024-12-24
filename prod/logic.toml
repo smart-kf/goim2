@@ -57,7 +57,7 @@
 ### websocket 连接创建回调
 [auth]
     enable = true
-    authUrl = "http://kf-api:8081/notify/websocket-auth"
+    authUrl = "http://kf-api:8081/internal/api/websocket-auth"
     authMethod = "POST"
     authOkCode = 200
     timeout = 60
