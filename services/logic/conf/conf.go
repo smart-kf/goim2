@@ -163,7 +163,6 @@ type HTTPServer struct {
 type Auth struct {
 	Enable     bool
 	AuthUrl    string
-	AuthMethod string
 	AuthOkCode int
 	Timeout    int
 }

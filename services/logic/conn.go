@@ -103,10 +103,13 @@ func (l *Logic) onAuth(ctx context.Context, query string) error {
 	req = req.WithContext(ctx)
 	resp, err := l.authHttpClent.Do(req)
 	if err != nil {
+		log.Infof("websocket onAuth hoook failed: %+v", err)
 		return err
 	}
 	if resp.StatusCode != l.c.Auth.AuthOkCode {
+		log.Infof("websocket onAuth hook status not equal except=%v get=%v", l.c.Auth.AuthOkCode, resp.StatusCode)
 		return errors.New("auth failed")
 	}
+	log.Infof("websocket onAuth ok")
 	return nil
 }

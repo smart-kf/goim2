@@ -45,6 +45,7 @@
 [redis]
     network = "tcp"
     addr = "redis:6379"
+    auth = "G4t!9zQ#xA7$kRp2"
     active = 60000
     idle = 1024
     dialTimeout = "200ms"
@@ -52,3 +53,16 @@
     writeTimeout = "500ms"
     idleTimeout = "120s"
     expire = "30m"
+
+### websocket 连接创建回调
+[auth]
+    enable = true
+    authUrl = "http://kf-api:8081/notify/websocket-auth"
+    authMethod = "POST"
+    authOkCode = 200
+    timeout = 60
+
+
+
+
+
