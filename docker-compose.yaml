@@ -2,7 +2,7 @@ services:
   discovery:
     image: goim
     ports:
-      - 7171:7171  # rpc
+      - 127.0.0.1:7171:7171  # rpc
     command:
       - /app/dis
       - -conf=discovery.toml
@@ -10,14 +10,14 @@ services:
       - ./prod/discovery.toml:/app/discovery.toml
     restart: always
     networks:
-      - mysql_kf_network
+      - kf_network
 
   comet:
     image: goim
     ports:
-      - 3109:3109  # rpc
-      - 3101:3101  # tcp ??
-      - 3102:3102  # websocket
+      - 127.0.0.1:3109:3109  # rpc
+      - 127.0.0.1:3101:3101  # tcp ??
+      - 127.0.0.1:3102:3102  # websocket
     command:
       - /app/comet
       - -conf=/app/comet.toml
@@ -31,13 +31,13 @@ services:
       - discovery
     restart: always
     networks:
-      - mysql_kf_network
+      - kf_network
 
   logic:
     image: goim
     ports:
-      - 3119:3119  # rpc
-      - 3111:3111  # http
+      - 127.0.0.1:3119:3119  # rpc
+      - 127.0.0.1:3111:3111  # http
     depends_on:
       - discovery
     command:
@@ -51,7 +51,7 @@ services:
       - ./prod/logic.toml:/app/logic.toml
     restart: always
     networks:
-      - mysql_kf_network
+      - kf_network
       - kf-api_kf_service_network
 
   job:
@@ -69,10 +69,8 @@ services:
       - ./prod/job.toml:/app/job.toml
     restart: always
     networks:
-      - mysql_kf_network
+      - kf_network
 
 networks:
-  mysql_kf_network:
-    external: true
-  kf-api_kf_service_network:
+  kf_network:
     external: true
