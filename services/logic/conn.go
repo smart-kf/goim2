@@ -87,7 +87,9 @@ func (l *Logic) RenewOnline(c context.Context, server string, roomCount map[stri
 
 // Receive receive a message.
 func (l *Logic) Receive(c context.Context, mid int64, proto *protocol.Proto) (err error) {
-	log.Infof("receive mid:%d message:%+v", mid, proto)
+	// TODO:: 暂时先这样写，数据原封不动返给客户端.
+	l.PushMids(c, proto.Op, []int64{mid}, proto.Body)
+	log.Infof("receive mid=%d op=%d, body=%s", mid, proto.Op, string(proto.Body))
 	return
 }
 
