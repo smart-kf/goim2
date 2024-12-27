@@ -47,3 +47,12 @@ const (
 	// OpUnsubReply unsubscribe operation reply
 	OpUnsubReply = int32(17)
 )
+
+// 下面是我们自定义的 operation.
+const (
+	// OpClientMsg 客户端主动向服务端发送消息.
+	OpClientMsg = int32(100)
+
+	// OpClientMsgReply 服务端向客户端回复消息指的是 type=msg 类型的消息, 收到此类型的消息，代表客户端上一条消息发送成功.
+	OpClientMsgReply = int32(101)
+)

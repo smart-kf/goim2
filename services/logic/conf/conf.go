@@ -130,8 +130,9 @@ type Redis struct {
 
 // Kafka .
 type Kafka struct {
-	Topic   string
-	Brokers []string
+	Topic               string
+	ReceiveMessageTopic string // 收到消息的topic
+	Brokers             []string
 }
 
 // RPCClient is RPC client config.
