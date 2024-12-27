@@ -40,11 +40,12 @@ writeTimeout = "1s"
 
 [kafka]
 topic = "goim-push-topic"
-brokers = ["192.168.31.42:9092"]
+brokers = ["192.168.101.12:9092"]
+receiveMessageTopic = "im_message"
 
 [redis]
 network = "tcp"
-addr = "redis:6379"
+addr = "127.0.0.1:6379"
 auth = "238XSfh98xa"
 active = 60000
 idle = 1024
